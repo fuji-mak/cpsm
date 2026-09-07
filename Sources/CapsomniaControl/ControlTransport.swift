@@ -109,14 +109,32 @@ private func readLine(from descriptor: Int32, maxBytes: Int) throws -> Data {
 private func ensurePrivateDirectory(_ url: URL) throws {
     let fileManager = FileManager.default
     if !fileManager.fileExists(atPath: url.path) {
-        try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
-        _ = chmod(url.path, mode_t(S_IRUSR | S_IWUSR | S_IXUSR))
+        try fileManager.createDirectory(
+            at: url,
+            withIntermediateDirectories: true,
+            attributes: [.posixPermissions: 0o700]
+        )
     }
+    // Capsomnia 3.5's updater also used this cache directory and could leave
+    // it at 0755. Open the actual directory without following a symlink,
+    // then check ownership before tightening permissions on that same inode.
+    let descriptor = Darwin.open(url.path, O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
+    guard descriptor >= 0 else { throw ControlTransportError.unsafeEndpoint }
+    defer { close(descriptor) }
     var info = stat()
-    guard lstat(url.path, &info) == 0,
+    guard fstat(descriptor, &info) == 0,
           (info.st_mode & S_IFMT) == S_IFDIR,
-          info.st_uid == getuid(),
-          (info.st_mode & (S_IRWXG | S_IRWXO)) == 0 else {
+          info.st_uid == getuid() else {
+        throw ControlTransportError.unsafeEndpoint
+    }
+    let privateMode = mode_t(S_IRUSR | S_IWUSR | S_IXUSR)
+    if (info.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO)) != privateMode {
+        guard fchmod(descriptor, privateMode) == 0 else {
+            throw ControlTransportError.unsafeEndpoint
+        }
+    }
+    guard fstat(descriptor, &info) == 0,
+          (info.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO)) == privateMode else {
         throw ControlTransportError.unsafeEndpoint
     }
 }

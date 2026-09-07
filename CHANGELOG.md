@@ -8,3 +8,4 @@
 - Read/write app settings, with keyboard shortcut editing kept in the GUI.
 - Universal macOS installers with optional Codex/Claude Code Skill destinations.
 - CapsomniaControl library for the app's versioned source snapshot.
+- Migrate user-owned cache directories left by the old app updater to private permissions before starting the CLI service.

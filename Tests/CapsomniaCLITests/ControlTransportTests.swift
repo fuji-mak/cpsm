@@ -29,6 +29,74 @@ final class ControlTransportTests: XCTestCase {
         XCTAssertEqual(response, .success(.object(["state": .string("on")])))
     }
 
+    func testLegacyUpdaterCacheIsMigratedAndStillAcceptsRequests() throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("cpsm-old-\(getpid())")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        XCTAssertEqual(chmod(directory.path, 0o755), 0)
+        let cachedInstaller = directory.appendingPathComponent("Capsomnia-4.0.0.pkg")
+        let cachedData = Data("existing update download".utf8)
+        try cachedData.write(to: cachedInstaller)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let path = directory.appendingPathComponent("endpoint").path
+        let server = try ControlServer(endpointPath: path) { _, reply in
+            reply(.success(.string("ready")))
+        }
+        try server.start()
+        defer { server.stop() }
+        var info = stat()
+        XCTAssertEqual(lstat(directory.path, &info), 0)
+        XCTAssertEqual(info.st_mode & 0o777, 0o700)
+        XCTAssertEqual(try Data(contentsOf: cachedInstaller), cachedData)
+
+        let client = try ControlClient(endpointPath: path)
+        let completed = expectation(description: "legacy cache request")
+        var response: ControlResponse?
+        DispatchQueue.global().async {
+            response = try? client.send(ControlRequest(arguments: ["status"]))
+            completed.fulfill()
+        }
+        wait(for: [completed], timeout: 3)
+        XCTAssertEqual(response, .success(.string("ready")))
+    }
+
+    func testSymlinkedCacheIsRejectedWithoutChangingItsTarget() throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("cpsm-link-\(getpid())")
+        let target = directory.appendingPathComponent("target")
+        let link = directory.appendingPathComponent("link")
+        try FileManager.default.createDirectory(at: target, withIntermediateDirectories: true)
+        XCTAssertEqual(chmod(target.path, 0o755), 0)
+        try FileManager.default.createSymbolicLink(at: link, withDestinationURL: target)
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        let server = try ControlServer(endpointPath: link.appendingPathComponent("endpoint").path) { _, _ in }
+        XCTAssertThrowsError(try server.start()) { error in
+            XCTAssertEqual(error as? ControlTransportError, .unsafeEndpoint)
+        }
+        var info = stat()
+        XCTAssertEqual(lstat(target.path, &info), 0)
+        XCTAssertEqual(info.st_mode & 0o777, 0o755)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: target.appendingPathComponent("endpoint").path))
+    }
+
+    func testForeignOwnedCacheIsRejectedWithoutChangingPermissions() throws {
+        // /private/tmp is a system-owned directory, unlike our temporary fixtures.
+        let directory = "/private/tmp"
+        var before = stat()
+        XCTAssertEqual(lstat(directory, &before), 0)
+        try XCTSkipIf(before.st_uid == getuid(), "Requires an unprivileged test user")
+        let path = "\(directory)/cpsm-foreign-\(getpid()).sock"
+        let server = try ControlServer(endpointPath: path) { _, _ in }
+        XCTAssertThrowsError(try server.start()) { error in
+            XCTAssertEqual(error as? ControlTransportError, .unsafeEndpoint)
+        }
+        var after = stat()
+        XCTAssertEqual(lstat(directory, &after), 0)
+        XCTAssertEqual(after.st_mode, before.st_mode)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: path))
+    }
+
     func testForeignEndpointIsNotRemoved() throws {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent("capsomnia-control-\(UUID().uuidString)")
