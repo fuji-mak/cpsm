@@ -5,12 +5,16 @@
 
 [English](README.md) · [コマンド一覧](docs/commands.md) · [配布手順](docs/releasing.md)
 
-**0.1.0は未公開の候補版です。** 対応アプリはCapsomnia **4.0.0以降**です。
-公開済み3.5.0にはCLIの受付機能がありません。`fuji-mak/cpsm` は確認用のプライベートリポジトリです。一般公開は確認後に行います。
+**v0.1.0は2026年9月8日に公開した初回リリースです。** 対応アプリはCapsomnia
+**4.0.0以降**です。一般公開中のCapsomnia 3.5.0にはCLIの受付機能がありません。
+対応アプリ4.0.0の一般公開は準備中です。
+
+[Capsomnia CLI & Skillをダウンロード](https://github.com/fuji-mak/cpsm/releases/latest/download/cpsm.pkg) ·
+[Capsomnia Toolsをダウンロード](https://github.com/fuji-mak/cpsm/releases/latest/download/Capsomnia-Tools.pkg)
 
 ## 導入
 
-単体の `cpsm.pkg` を開くとCLIが `/usr/local/bin/cpsm` に入ります。
+単体の [`cpsm.pkg`](https://github.com/fuji-mak/cpsm/releases/latest/download/cpsm.pkg) を開くとCLIが `/usr/local/bin/cpsm` に入ります。
 SkillはCodex／Claude Codeから導入先を選べます。本文は同じで配置先だけが異なります。
 
 - Codex: `~/.codex/skills/capsomnia/SKILL.md`
@@ -23,8 +27,11 @@ CLIはmacOS 13.5以降のApple silicon／Intelに対応します。**Capsomnia�
 導入が必要**です。アプリの配布pkgはApple silicon・macOS 14以降、Intel向けはmacOS
 13.5以降のソースビルドです。CLIの実行にsudoは不要です。
 
-Capsomniaの **詳細設定 → CLI & Skill** からは、cpsm・MacReadyと両Skillをまとめた
-`Capsomnia-Tools.pkg` を取得できます。MacReadyは状態を読み取る独立した作品です。
+cpsmの `v0.1.0` リリースには、cpsm・MacReadyと両Skillをまとめた
+[`Capsomnia-Tools.pkg`](https://github.com/fuji-mak/cpsm/releases/latest/download/Capsomnia-Tools.pkg) も含まれます。
+Capsomniaの **詳細設定 → CLI & Skill** は同じパッケージへリンクします。
+MacReadyはCapsomniaを必要としない、単独利用可能なツールとして
+[専用リリース](https://github.com/fuji-mak/MacReady/releases/latest/download/MacReady.pkg) も公開しています。
 
 ## 使い方
 
@@ -65,14 +72,17 @@ swift test
 SKIP_SIGNING=true ./scripts/build-pkg.sh
 ```
 
-未署名pkgはローカル検証用です。公開前の署名・公証は[配布手順](docs/releasing.md)を参照してください。
+未署名pkgはローカル検証用です。署名・公証と公開後の更新は[配布手順](docs/releasing.md)を参照してください。
+Tools統合版のビルドには隣接する `MacReady` リポジトリが必要です。
+`./scripts/build-tools-pkg.sh` はMacReadyの単体成果物を隣接リポジトリの `dist` に置き、
+統合pkgと `Tools-SHA256SUMS.txt` をこのリポジトリの `dist` に生成します。
 
 削除は `sudo rm /usr/local/bin/cpsm` と、導入した各エージェントの `capsomnia` Skill
 フォルダの削除で行えます。アプリ・設定・MacReadyは残ります。CLIの削除自体では
 スリープ抑止は解除されないため、必要に応じて先にアプリでOFFにしてください。
 
 作者: [Taketo Fujimaki / 藤巻雄飛](https://github.com/fuji-mak)
-· [Capsomnia](https://capsomnia.com/) · MacReady（`fuji-mak/MacReady`としてリポジトリ・初版を公開準備中）
+· [Capsomnia](https://capsomnia.com/) · [MacReady](https://github.com/fuji-mak/MacReady)
 · [連絡先](https://x.com/tf_makimaki)
 
 MITライセンス。

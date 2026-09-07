@@ -20,3 +20,5 @@ jobs:
           lipo dist/bin/cpsm -verify_arch arm64 x86_64
           zsh -n scripts/build-pkg.sh
           zsh -n scripts/notarize-pkg.sh
+          zsh -n scripts/build-tools-pkg.sh
+          zsh -n scripts/notarize-tools-pkg.sh
