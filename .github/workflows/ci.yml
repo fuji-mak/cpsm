@@ -1,0 +1,22 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  cli:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - run: swift test
+      - name: Build and verify universal local installer
+        run: SKIP_SIGNING=true ./scripts/build-pkg.sh
+      - name: Check version and command help
+        run: |
+          test "$(dist/bin/cpsm version)" = "cpsm $(cat VERSION)"
+          dist/bin/cpsm help
+          lipo dist/bin/cpsm -verify_arch arm64 x86_64
+          zsh -n scripts/build-pkg.sh
+          zsh -n scripts/notarize-pkg.sh
