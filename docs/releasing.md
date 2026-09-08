@@ -1,8 +1,7 @@
 # Release preparation
 
-Release line: **cpsm 0.1.0**, protocol **1**, Capsomnia **4.0.0+**.
-The public Capsomnia app may still be on an earlier version; do not advertise
-cpsm as compatible with the generally available 3.5.0 app. Local builds do not
+Release line: **cpsm 0.1.1**, protocol **1**, Capsomnia **4.0.0+**.
+Local builds do not
 publish, install files, or change the Mac's awake state.
 
 ## Local verification
@@ -35,7 +34,7 @@ or short timers during a running job: these can sleep the Mac.
 
    The script keeps the cpsm standalone output in `cpsm/dist`, writes MacReady's
    standalone output to `../MacReady/dist`, and creates
-   `Capsomnia-Tools-0.1.0.pkg`, `Capsomnia-Tools.pkg`, and
+   `Capsomnia-Tools-0.1.1.pkg`, `Capsomnia-Tools.pkg`, and
    `Tools-SHA256SUMS.txt` in `cpsm/dist`. Set `MACREADY_REPO`, `DIST_DIR`, or
    `MACREADY_DIST` when the sibling checkout or output locations differ. Set
    `SKIP_COMPONENT_BUILD=true` to reuse existing standalone components.
@@ -65,9 +64,9 @@ This staples, validates, assesses, and refreshes both Tools package names and
 `Tools-SHA256SUMS.txt`. It does not publish the artifacts.
 
 The script submits to Apple, staples and validates the ticket, and refreshes the fixed package and checksums. It
-does not publish. When the release artifacts are ready, publish tag `v0.1.0` with
-`cpsm.pkg`, `cpsm-0.1.0.pkg`, `SHA256SUMS.txt`,
-`Capsomnia-Tools.pkg`, `Capsomnia-Tools-0.1.0.pkg`, and
+does not publish. When the release artifacts are ready, publish tag `v0.1.1` with
+`cpsm.pkg`, `cpsm-0.1.1.pkg`, `SHA256SUMS.txt`,
+`Capsomnia-Tools.pkg`, `Capsomnia-Tools-0.1.1.pkg`, and
 `Tools-SHA256SUMS.txt`, then keep the README's release links current. The
 repository includes the Skill; no ZIP installer is needed.
 
@@ -76,6 +75,5 @@ links to the author, Capsomnia and MacReady in the description and release notes
 
 Capsomnia downloads the combined package from this repository's
 `releases/latest/download/Capsomnia-Tools.pkg` URL. Include that asset in each
-release and verify compatibility with Capsomnia 4.0.0+. The generally available
-Capsomnia 3.5.0 app has no CLI service; its compatible app release is being
-prepared. Tools updates can then be published without rebuilding the app.
+release and verify compatibility with Capsomnia 4.0.0+. Tools updates can then
+be published without rebuilding the app.

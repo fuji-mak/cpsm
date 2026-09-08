@@ -9,9 +9,8 @@ sleep semantics.
 
 [日本語](README.ja.md) · [Command reference](docs/commands.md) · [Release guide](docs/releasing.md)
 
-**v0.1.0 is the first public release (September 8, 2026)** and requires
-Capsomnia **4.0.0+**. The generally available Capsomnia app is still 3.5.0 and
-does not include the CLI service; its 4.0.0 release is being prepared.
+**v0.1.1 is the current public release (September 8, 2026)** and requires
+Capsomnia **4.0.0+**. This is the first CLI-compatible Capsomnia release line.
 
 [Download cpsm CLI & Skill](https://github.com/fuji-mak/cpsm/releases/latest/download/cpsm.pkg) ·
 [Download Capsomnia Tools](https://github.com/fuji-mak/cpsm/releases/latest/download/Capsomnia-Tools.pkg)
@@ -20,9 +19,9 @@ does not include the CLI service; its 4.0.0 release is being prepared.
 
 Open the [cpsm.pkg](https://github.com/fuji-mak/cpsm/releases/latest/download/cpsm.pkg).
 It installs `/usr/local/bin/cpsm` and
-lets you choose Skill destinations: Codex, Claude Code, or both. These receive
-**the same Skill**, in `~/.codex/skills/capsomnia/` and
-`~/.claude/skills/capsomnia/`. Restart the agent session afterward. You can also
+installs one shared Skill for Codex and Claude Code at
+`~/.agents/skills/capsomnia/`, with `~/.claude/skills/capsomnia` linked to it.
+There are no agent destination choices. Restart the agent session afterward. You can also
 copy [the Skill folder](skills/capsomnia) to another compatible agent yourself.
 
 The CLI supports Apple silicon and Intel on macOS 13.5+. **Capsomnia.app and its
@@ -30,9 +29,9 @@ helper must already be installed.** The app's packaged release requires Apple
 silicon/macOS 14+; Intel users can build the app from source on macOS 13.5+.
 The CLI runs as your normal user, without sudo.
 
-The cpsm `v0.1.0` release also provides
+The cpsm `v0.1.1` release also provides
 [`Capsomnia-Tools.pkg`](https://github.com/fuji-mak/cpsm/releases/latest/download/Capsomnia-Tools.pkg),
-combining cpsm, MacReady and both optional Skills. MacReady reads Mac conditions
+combining cpsm, MacReady and both shared Skills. MacReady reads Mac conditions
 without needing the app and is also available as an independent
 [MacReady release](https://github.com/fuji-mak/MacReady/releases/latest/download/MacReady.pkg).
 Capsomnia's **Advanced Settings → CLI & Skill** links to the same Tools package.
@@ -90,14 +89,14 @@ snapshot of it so each repository builds independently.
 
 ## Remove
 
-Delete the CLI and only the Skill directories you installed:
+Delete the CLI and the shared Skill:
 
 ```sh
 sudo rm /usr/local/bin/cpsm
 sudo rm /usr/local/share/cpsm/LICENSE
 sudo rmdir /usr/local/share/cpsm
-rm -r ~/.codex/skills/capsomnia
-rm -r ~/.claude/skills/capsomnia
+rm -r ~/.agents/skills/capsomnia
+rm ~/.claude/skills/capsomnia
 ```
 
 The app, preferences and MacReady remain installed. Removing the CLI does not

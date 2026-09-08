@@ -5,9 +5,9 @@
 
 [English](README.md) · [コマンド一覧](docs/commands.md) · [配布手順](docs/releasing.md)
 
-**v0.1.0は2026年9月8日に公開した初回リリースです。** 対応アプリはCapsomnia
-**4.0.0以降**です。一般公開中のCapsomnia 3.5.0にはCLIの受付機能がありません。
-対応アプリ4.0.0の一般公開は準備中です。
+**v0.1.1は2026年9月8日現在の公開版です。** 対応アプリはCapsomnia
+**4.0.0以降**です。CLIに対応するCapsomniaの公開リリース系列です。
+対応アプリ4.0.0以降の公開リリース系列に対応します。
 
 [Capsomnia CLI & Skillをダウンロード](https://github.com/fuji-mak/cpsm/releases/latest/download/cpsm.pkg) ·
 [Capsomnia Toolsをダウンロード](https://github.com/fuji-mak/cpsm/releases/latest/download/Capsomnia-Tools.pkg)
@@ -15,10 +15,10 @@
 ## 導入
 
 単体の [`cpsm.pkg`](https://github.com/fuji-mak/cpsm/releases/latest/download/cpsm.pkg) を開くとCLIが `/usr/local/bin/cpsm` に入ります。
-SkillはCodex／Claude Codeから導入先を選べます。本文は同じで配置先だけが異なります。
+Skillは共通先へ自動導入され、Codex／Claude Codeから利用できます。導入先の選択はありません。
 
-- Codex: `~/.codex/skills/capsomnia/SKILL.md`
-- Claude Code: `~/.claude/skills/capsomnia/SKILL.md`
+- 共通: `~/.agents/skills/capsomnia/SKILL.md`
+- Claude Code: `~/.claude/skills/capsomnia`（共通先へのsymlink）
 
 導入後はエージェントのセッションを新しくしてください。他の対応エージェントには
 [Skillフォルダ](skills/capsomnia)を、そのエージェントのSkill保存先へ配置できます。
@@ -27,7 +27,7 @@ CLIはmacOS 13.5以降のApple silicon／Intelに対応します。**Capsomnia�
 導入が必要**です。アプリの配布pkgはApple silicon・macOS 14以降、Intel向けはmacOS
 13.5以降のソースビルドです。CLIの実行にsudoは不要です。
 
-cpsmの `v0.1.0` リリースには、cpsm・MacReadyと両Skillをまとめた
+cpsmの `v0.1.1` リリースには、cpsm・MacReadyと両Skillをまとめた
 [`Capsomnia-Tools.pkg`](https://github.com/fuji-mak/cpsm/releases/latest/download/Capsomnia-Tools.pkg) も含まれます。
 Capsomniaの **詳細設定 → CLI & Skill** は同じパッケージへリンクします。
 MacReadyはCapsomniaを必要としない、単独利用可能なツールとして
@@ -77,8 +77,8 @@ Tools統合版のビルドには隣接する `MacReady` リポジトリが必要
 `./scripts/build-tools-pkg.sh` はMacReadyの単体成果物を隣接リポジトリの `dist` に置き、
 統合pkgと `Tools-SHA256SUMS.txt` をこのリポジトリの `dist` に生成します。
 
-削除は `sudo rm /usr/local/bin/cpsm` と、導入した各エージェントの `capsomnia` Skill
-フォルダの削除で行えます。アプリ・設定・MacReadyは残ります。CLIの削除自体では
+削除は `sudo rm /usr/local/bin/cpsm` と、共通の `capsomnia` Skill
+フォルダおよびClaude Codeのsymlinkの削除で行えます。アプリ・設定・MacReadyは残ります。CLIの削除自体では
 スリープ抑止は解除されないため、必要に応じて先にアプリでOFFにしてください。
 
 作者: [Taketo Fujimaki / 藤巻雄飛](https://github.com/fuji-mak)

@@ -1,6 +1,6 @@
-# Command reference — cpsm 0.1.0
+# Command reference — cpsm 0.1.1
 
-First supported public Capsomnia version: 4.0.0 (currently a release candidate).
+First supported public Capsomnia version: 4.0.0.
 `cpsm [--json] [--app PATH] <command>` accepts flags before or after the command.
 
 | Command | Effect |

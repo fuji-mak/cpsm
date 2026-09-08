@@ -4,11 +4,10 @@ CLI と Skill を追加します。Capsomnia アプリは別途インストー�
 
 ・CLI（必須）：/usr/local/bin/cpsm と /usr/local/bin/macready
 ・Skill（任意）：Capsomnia と MacReady
-  導入先 Codex：~/.codex/skills/
-  導入先 Claude Code：~/.claude/skills/
+  共通導入先：~/.agents/skills/
+  Claude Code：~/.claude/skills/ は共通先へのsymlink
 
-Skill の内容は共通です。インストール項目の「Skillをインストール」で、
-導入先を選んでください。両方が初期選択されており、複数選択も可能です。
+Skill の内容と導入先は共通です。インストーラーは選択なしで両方を導入します。
 Skill は現在このMacにログイン中のユーザーへインストールします。
 
 導入後は cpsm help で使い方を確認できます。
@@ -18,10 +17,9 @@ Capsomnia Tools
 This installer adds the optional local tools for Capsomnia:
 
 * CLI (required): cpsm and macready, installed at /usr/local/bin.
-* Skills (optional): Capsomnia and MacReady, with the same content for every agent.
-  Choose Codex (~/.codex/skills) and/or Claude Code (~/.claude/skills) as destinations.
+* Skills: Capsomnia and MacReady, shared by every agent under ~/.agents/skills.
+  Claude Code paths are symlinks to the shared Skills.
 
-Both destinations are selected by default and can be deselected in Customize.
 The Skills are written to the home directory of the user currently signed in
 at the Mac console. No Skill files are installed into a system root directory.
 

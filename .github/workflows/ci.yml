@@ -11,6 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - run: swift test
+      - name: Test shared Skill installer in a temporary home
+        run: ./scripts/test-install-skill-user.sh
       - name: Build and verify universal local installer
         run: SKIP_SIGNING=true ./scripts/build-pkg.sh
       - name: Check version and command help

@@ -35,8 +35,9 @@ done
 cat > "$WORK_DIR/distribution.xml" <<EOF
 <?xml version="1.0" encoding="utf-8"?>
 <installer-gui-script minSpecVersion="2">
+  <!-- CapsomniaToolsInstallFormat: 2 -->
   <title>Capsomnia Tools</title>
-  <options customize="always" require-scripts="false" hostArchitectures="arm64,x86_64" />
+  <options customize="never" require-scripts="false" hostArchitectures="arm64,x86_64" />
   <volume-check script="true">
     <allowed-os-versions><os-version min="13.5" /></allowed-os-versions>
   </volume-check>
@@ -44,21 +45,15 @@ cat > "$WORK_DIR/distribution.xml" <<EOF
   <readme file="README.txt" />
   <choices-outline>
     <line choice="cli" />
-    <line choice="skills">
-      <line choice="codex-skill" />
-      <line choice="claude-skill" />
-    </line>
+    <line choice="shared-skills" />
   </choices-outline>
   <choice id="cli" title="cpsm + MacReady CLI (required)" description="Install cpsm $CPSM_VERSION and macready $MACREADY_VERSION in /usr/local/bin. cpsm requires Capsomnia 4.0 or later." start_selected="true" enabled="false">
     <pkg-ref id="com.github.fuji-mak.cpsm.pkg.cli" />
     <pkg-ref id="com.github.fuji-mak.macready.pkg.cli" />
   </choice>
-  <choice id="skills" title="Skillをインストール / Install Skills" description="共通Skillの導入先を選択 / Choose destinations for the same Skills." start_selected="true" />
-  <choice id="codex-skill" title="Codex" description="~/.codex/skills — capsomnia + macready" start_selected="true">
+  <choice id="shared-skills" title="CLI &amp; Skills" description="Install the CLIs and compatible AI Skills." start_selected="true" enabled="false">
     <pkg-ref id="com.github.fuji-mak.cpsm.pkg.codex" />
     <pkg-ref id="com.github.fuji-mak.macready.pkg.codex" />
-  </choice>
-  <choice id="claude-skill" title="Claude Code" description="~/.claude/skills — capsomnia + macready" start_selected="true">
     <pkg-ref id="com.github.fuji-mak.cpsm.pkg.claude-code" />
     <pkg-ref id="com.github.fuji-mak.macready.pkg.claude-code" />
   </choice>
