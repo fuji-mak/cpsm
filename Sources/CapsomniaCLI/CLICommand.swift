@@ -157,12 +157,13 @@ private struct ParsedCLI {
 private enum CLIParser {
     static let settingKeys: Set<String> = [
         "dedicated-caps-lock-mode", "show-menu-bar-icon", "language", "launch-at-login",
-        "keep-display-awake", "ignore-external-caps-lock-off-while-lid-closed",
+        "keep-display-awake", "keep-hotspot-alive", "ignore-external-caps-lock-off-while-lid-closed",
         "auto-off-minutes", "automatic-update-checks"
     ]
     static let boolSettings: Set<String> = [
         "dedicated-caps-lock-mode", "show-menu-bar-icon", "launch-at-login",
-        "keep-display-awake", "ignore-external-caps-lock-off-while-lid-closed", "automatic-update-checks"
+        "keep-display-awake", "keep-hotspot-alive", "ignore-external-caps-lock-off-while-lid-closed",
+        "automatic-update-checks"
     ]
 
     static func parse(_ arguments: [String]) throws -> ParsedCLI {
