@@ -185,6 +185,15 @@ final class ControlTransportTests: XCTestCase {
 }
 
 final class CapsomniaCLITests: XCTestCase {
+    func testLanguageSettingAcceptsSupportedLanguagesAndRejectsUnsupportedValue() throws {
+        for language in ["en", "fr", "ja", "ko", "zh-Hans"] {
+            let parsed = try CLIParser.parse(["settings", "set", "language", language])
+            XCTAssertEqual(parsed.commandArguments, ["settings", "set", "language", language])
+        }
+
+        XCTAssertThrowsError(try CLIParser.parse(["settings", "set", "language", "de"]))
+    }
+
     func testHelpDoesNotRequireAnInstalledApp() {
         var output = ""
         let status = CapsomniaCLICommand.run(arguments: ["help"], output: { output = $0 }, errorOutput: { _ in })
@@ -202,7 +211,7 @@ final class CapsomniaCLITests: XCTestCase {
     func testVersionAndJSONUsageError() {
         var version = ""
         XCTAssertEqual(CapsomniaCLICommand.run(arguments: ["version"], output: { version = $0 }, errorOutput: { _ in }), 0)
-        XCTAssertEqual(version, "cpsm 0.1.1")
+        XCTAssertEqual(version, "cpsm 0.1.2")
 
         var json = ""
         let status = CapsomniaCLICommand.run(

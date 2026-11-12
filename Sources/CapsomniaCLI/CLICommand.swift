@@ -2,7 +2,7 @@ import Foundation
 import CapsomniaControl
 
 public struct CapsomniaCLICommand {
-    public static let version = "0.1.1"
+    public static let version = "0.1.2"
 
     public init() {}
 
@@ -146,7 +146,7 @@ private enum CLIError: Error, LocalizedError {
     }
 }
 
-private struct ParsedCLI {
+struct ParsedCLI {
     var appPath = "/Applications/Capsomnia.app"
     var json = false
     var help = false
@@ -154,7 +154,7 @@ private struct ParsedCLI {
     var commandArguments: [String] = []
 }
 
-private enum CLIParser {
+enum CLIParser {
     static let settingKeys: Set<String> = [
         "dedicated-caps-lock-mode", "show-menu-bar-icon", "language", "launch-at-login",
         "keep-display-awake", "keep-hotspot-alive", "ignore-external-caps-lock-off-while-lid-closed",
@@ -239,8 +239,8 @@ private enum CLIParser {
         if boolSettings.contains(key), value != "true", value != "false", value != "on", value != "off" {
             throw CLIError.invalidSetting("Setting '\(key)' expects true or false")
         }
-        if key == "language", !["en", "ja", "ko", "zh-Hans"].contains(value) {
-            throw CLIError.invalidSetting("language must be en, ja, ko, or zh-Hans")
+        if key == "language", !["en", "fr", "ja", "ko", "zh-Hans"].contains(value) {
+            throw CLIError.invalidSetting("language must be en, fr, ja, ko, or zh-Hans")
         }
         if key == "auto-off-minutes",
            Int(value).map({ $0 < 0 || $0 > 1440 }) ?? true {

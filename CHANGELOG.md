@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2 — 2026-11-13
+
+- Accept French (`fr`) when changing the Capsomnia language from the CLI.
+- Build standalone and combined installer payloads with a fixed umask and reject root-owned payload entries that normal users cannot read or traverse.
+
 ## 0.1.1 — 2026-09-08
 
 - Unified Skill installation in `~/.agents/skills`, with a Claude Code compatibility symlink.

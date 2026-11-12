@@ -1,5 +1,7 @@
 # cpsm — Capsomnia CLI & Skill
 
+
+Unpublished candidate: **cpsm 0.1.2**, adding French language selection and package permission checks.
 Control your Mac's awake mode from a terminal or an AI agent.
 
 `cpsm` is the command-line companion to [Capsomnia](https://capsomnia.com/).

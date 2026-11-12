@@ -1,5 +1,7 @@
 #!/bin/zsh
 set -euo pipefail
+# Installer payloads must remain readable regardless of the caller environment.
+umask 022
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 VERSION="$(/usr/bin/tr -d '\r\n' < "$ROOT_DIR/VERSION")"
 [[ "$VERSION" == <->.<->.<-> ]] || { echo "VERSION must be x.y.z" >&2; exit 1; }
@@ -71,6 +73,17 @@ productbuild --distribution "$WORK_DIR/distribution.xml" --package-path "$WORK_D
   --resources "$ROOT_DIR/resources/tools-installer" "$UNSIGNED"
 env -u COPYFILE_DISABLE pkgutil --expand-full "$UNSIGNED" "$WORK_DIR/verify"
 for tool in cpsm macready; do
+  unreadable_entry="$(/usr/bin/lsbom "$WORK_DIR/verify/$tool-cli.pkg/Bom" | /usr/bin/awk -F '\t' '
+    {
+      other = substr($2, length($2), 1) + 0
+      is_dir = length($2) == 5 && substr($2, 1, 1) == "4"
+      if ($3 != "0/0" || other < 4 || (is_dir && other % 2 == 0)) { print; exit }
+    }
+  ')"
+  if [[ -n "$unreadable_entry" ]]; then
+    echo "$tool payload has an unexpected owner or is not readable by normal users: $unreadable_entry" >&2
+    exit 1
+  fi
   codesign --verify --strict "$WORK_DIR/verify/$tool-cli.pkg/Payload/usr/local/bin/$tool"
 done
 if [[ "$SKIP_SIGNING" == true ]]; then

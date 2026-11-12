@@ -1,5 +1,7 @@
 # cpsm — Capsomnia CLI & Skill
 
+
+未公開候補は **cpsm 0.1.2** です。フランス語指定と配布pkgの権限検査を修正しています。
 ターミナルやAIエージェントから、Macのスリープ抑止・タイマー・設定を操作するCLIです。
 [Capsomnia](https://capsomnia.com/)の操作を担い、共通の `capsomnia` Skillを同梱します。
 

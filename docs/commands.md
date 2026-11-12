@@ -35,9 +35,11 @@ active does not replace that one-shot timer.
 | `keep-display-awake` | boolean |
 | `ignore-external-caps-lock-off-while-lid-closed` | boolean |
 | `automatic-update-checks` | boolean |
-| `language` | `en`, `ja`, `ko`, `zh-Hans` |
+| `language` | `en`, `fr`, `ja`, `ko`, `zh-Hans` |
 | `auto-off-minutes` | integer 0–1440; 0 disables saved default |
 | `shortcut` | read-only; configure in GUI |
+
+French (`fr`) requires Capsomnia 4.3.3 or later.
 
 Dedicated Caps Lock mode requires the app's Accessibility permission. The CLI
 does not bypass macOS permissions.
