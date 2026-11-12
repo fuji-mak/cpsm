@@ -1,6 +1,6 @@
 # Release preparation
 
-Candidate release line: **cpsm 0.1.2**, protocol **1**, Capsomnia **4.0.0+**.
+Release line: **cpsm 0.1.2**, protocol **1**, Capsomnia **4.0.0+**.
 Local builds do not
 publish, install files, or change the Mac's awake state.
 
@@ -79,3 +79,5 @@ release and verify compatibility with Capsomnia 4.0.0+. Tools updates can then
 be published without rebuilding the app.
 
 Before publishing, inspect the final signed installer payload permissions and verify commands as a non-root user against the installed app. Build with a restrictive caller umask (`077`) to confirm the scripts normalize payload permissions. Do not infer normal-user access from signing or notarization alone.
+
+For each Tools release, compare the bundled MacReady version with the latest published MacReady release and installed receipts. Do not reuse older components that would downgrade existing installations. When reusing a notarized public package, verify its signature and digest, preserve all three component contents, and confirm their identifiers and versions before signing the combined package. The current Tools release bundles MacReady 0.2.0.

@@ -13,6 +13,8 @@ jobs:
       - run: swift test
       - name: Test shared Skill installer in a temporary home
         run: ./scripts/test-install-skill-user.sh
+      - name: Reject mismatched reused Tools components
+        run: ./scripts/test-tools-component-metadata.sh
       - name: Build and verify universal local installer
         run: |
           umask 077

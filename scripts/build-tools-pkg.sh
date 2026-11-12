@@ -31,6 +31,22 @@ for tool in cpsm macready; do
   for component in cli codex-skill claude-skill; do
     file="$component_dir/$tool-$component.pkg"
     [[ -f "$file" ]] || { echo "Missing component: $file" >&2; exit 1; }
+    metadata_dir="$WORK_DIR/metadata-$tool-$component"
+    pkgutil --expand "$file" "$metadata_dir"
+    expected_version="$CPSM_VERSION"
+    [[ "$tool" == macready ]] && expected_version="$MACREADY_VERSION"
+    case "$component" in
+      cli) receipt=cli ;;
+      codex-skill) receipt=codex ;;
+      claude-skill) receipt=claude-code ;;
+    esac
+    expected_identifier="com.github.fuji-mak.$tool.pkg.$receipt"
+    actual_version="$(xmllint --xpath 'string(/pkg-info/@version)' "$metadata_dir/PackageInfo")"
+    actual_identifier="$(xmllint --xpath 'string(/pkg-info/@identifier)' "$metadata_dir/PackageInfo")"
+    if [[ "$actual_version" != "$expected_version" || "$actual_identifier" != "$expected_identifier" ]]; then
+      echo "Unexpected component metadata: $tool-$component (identifier=$actual_identifier version=$actual_version; expected $expected_identifier $expected_version)" >&2
+      exit 1
+    fi
     cp "$file" "$WORK_DIR/"
   done
 done

@@ -1,7 +1,4 @@
 # cpsm — Capsomnia CLI & Skill
-
-
-Unpublished candidate: **cpsm 0.1.2**, adding French language selection and package permission checks.
 Control your Mac's awake mode from a terminal or an AI agent.
 
 `cpsm` is the command-line companion to [Capsomnia](https://capsomnia.com/).
@@ -11,7 +8,7 @@ sleep semantics.
 
 [日本語](README.ja.md) · [Command reference](docs/commands.md) · [Release guide](docs/releasing.md)
 
-**v0.1.1 is the current public release (September 8, 2026)** and requires
+**v0.1.2 is the current public release (November 13, 2026)** and requires
 Capsomnia **4.0.0+**. This is the first CLI-compatible Capsomnia release line.
 
 [Download cpsm CLI & Skill](https://github.com/fuji-mak/cpsm/releases/latest/download/cpsm.pkg) ·
@@ -31,7 +28,7 @@ helper must already be installed.** The app's packaged release requires Apple
 silicon/macOS 14+; Intel users can build the app from source on macOS 13.5+.
 The CLI runs as your normal user, without sudo.
 
-The cpsm `v0.1.1` release also provides
+The cpsm `v0.1.2` release also provides
 [`Capsomnia-Tools.pkg`](https://github.com/fuji-mak/cpsm/releases/latest/download/Capsomnia-Tools.pkg),
 combining cpsm, MacReady and both shared Skills. MacReady reads Mac conditions
 without needing the app and is also available as an independent
