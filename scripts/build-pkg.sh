@@ -1,5 +1,7 @@
 #!/bin/zsh
 set -euo pipefail
+# Installer payloads must remain readable regardless of the caller environment.
+umask 022
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 PRODUCT="cpsm"
@@ -105,6 +107,17 @@ EOF
 
 # Inspect payloads without installing anything on this Mac.
 /usr/bin/env -u COPYFILE_DISABLE /usr/sbin/pkgutil --expand-full "$WORK_DIR/unsigned.pkg" "$WORK_DIR/expanded"
+unreadable_entry="$(/usr/bin/lsbom "$WORK_DIR/expanded/$CLI-cli.pkg/Bom" | /usr/bin/awk -F '\t' '
+  {
+    other = substr($2, length($2), 1) + 0
+    is_dir = length($2) == 5 && substr($2, 1, 1) == "4"
+    if ($3 != "0/0" || other < 4 || (is_dir && other % 2 == 0)) { print; exit }
+  }
+')"
+if [[ -n "$unreadable_entry" ]]; then
+  echo "Package payload has an unexpected owner or is not readable by normal users: $unreadable_entry" >&2
+  exit 1
+fi
 /usr/bin/codesign --verify --strict "$WORK_DIR/expanded/$CLI-cli.pkg/Payload/usr/local/bin/$CLI"
 /usr/bin/cmp -s "$ROOT_DIR/LICENSE" "$WORK_DIR/expanded/$CLI-cli.pkg/Payload/usr/local/share/$CLI/LICENSE"
 for destination in codex claude; do

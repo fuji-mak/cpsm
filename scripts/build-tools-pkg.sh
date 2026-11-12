@@ -1,5 +1,7 @@
 #!/bin/zsh
 set -euo pipefail
+# Installer payloads must remain readable regardless of the caller environment.
+umask 022
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 VERSION="$(/usr/bin/tr -d '\r\n' < "$ROOT_DIR/VERSION")"
 [[ "$VERSION" == <->.<->.<-> ]] || { echo "VERSION must be x.y.z" >&2; exit 1; }
@@ -29,6 +31,22 @@ for tool in cpsm macready; do
   for component in cli codex-skill claude-skill; do
     file="$component_dir/$tool-$component.pkg"
     [[ -f "$file" ]] || { echo "Missing component: $file" >&2; exit 1; }
+    metadata_dir="$WORK_DIR/metadata-$tool-$component"
+    pkgutil --expand "$file" "$metadata_dir"
+    expected_version="$CPSM_VERSION"
+    [[ "$tool" == macready ]] && expected_version="$MACREADY_VERSION"
+    case "$component" in
+      cli) receipt=cli ;;
+      codex-skill) receipt=codex ;;
+      claude-skill) receipt=claude-code ;;
+    esac
+    expected_identifier="com.github.fuji-mak.$tool.pkg.$receipt"
+    actual_version="$(xmllint --xpath 'string(/pkg-info/@version)' "$metadata_dir/PackageInfo")"
+    actual_identifier="$(xmllint --xpath 'string(/pkg-info/@identifier)' "$metadata_dir/PackageInfo")"
+    if [[ "$actual_version" != "$expected_version" || "$actual_identifier" != "$expected_identifier" ]]; then
+      echo "Unexpected component metadata: $tool-$component (identifier=$actual_identifier version=$actual_version; expected $expected_identifier $expected_version)" >&2
+      exit 1
+    fi
     cp "$file" "$WORK_DIR/"
   done
 done
@@ -71,6 +89,17 @@ productbuild --distribution "$WORK_DIR/distribution.xml" --package-path "$WORK_D
   --resources "$ROOT_DIR/resources/tools-installer" "$UNSIGNED"
 env -u COPYFILE_DISABLE pkgutil --expand-full "$UNSIGNED" "$WORK_DIR/verify"
 for tool in cpsm macready; do
+  unreadable_entry="$(/usr/bin/lsbom "$WORK_DIR/verify/$tool-cli.pkg/Bom" | /usr/bin/awk -F '\t' '
+    {
+      other = substr($2, length($2), 1) + 0
+      is_dir = length($2) == 5 && substr($2, 1, 1) == "4"
+      if ($3 != "0/0" || other < 4 || (is_dir && other % 2 == 0)) { print; exit }
+    }
+  ')"
+  if [[ -n "$unreadable_entry" ]]; then
+    echo "$tool payload has an unexpected owner or is not readable by normal users: $unreadable_entry" >&2
+    exit 1
+  fi
   codesign --verify --strict "$WORK_DIR/verify/$tool-cli.pkg/Payload/usr/local/bin/$tool"
 done
 if [[ "$SKIP_SIGNING" == true ]]; then

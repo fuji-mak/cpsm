@@ -1,11 +1,10 @@
 # cpsm — Capsomnia CLI & Skill
-
 ターミナルやAIエージェントから、Macのスリープ抑止・タイマー・設定を操作するCLIです。
 [Capsomnia](https://capsomnia.com/)の操作を担い、共通の `capsomnia` Skillを同梱します。
 
 [English](README.md) · [コマンド一覧](docs/commands.md) · [配布手順](docs/releasing.md)
 
-**v0.1.1は2026年9月8日現在の公開版です。** 対応アプリはCapsomnia
+**v0.1.2は2026年11月13日現在の公開版です。** 対応アプリはCapsomnia
 **4.0.0以降**です。CLIに対応するCapsomniaの公開リリース系列です。
 対応アプリ4.0.0以降の公開リリース系列に対応します。
 
@@ -27,7 +26,7 @@ CLIはmacOS 13.5以降のApple silicon／Intelに対応します。**Capsomnia�
 導入が必要**です。アプリの配布pkgはApple silicon・macOS 14以降、Intel向けはmacOS
 13.5以降のソースビルドです。CLIの実行にsudoは不要です。
 
-cpsmの `v0.1.1` リリースには、cpsm・MacReadyと両Skillをまとめた
+cpsmの `v0.1.2` リリースには、cpsm・MacReadyと両Skillをまとめた
 [`Capsomnia-Tools.pkg`](https://github.com/fuji-mak/cpsm/releases/latest/download/Capsomnia-Tools.pkg) も含まれます。
 Capsomniaの **詳細設定 → CLI & Skill** は同じパッケージへリンクします。
 MacReadyはCapsomniaを必要としない、単独利用可能なツールとして

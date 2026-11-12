@@ -1,6 +1,6 @@
 # Release preparation
 
-Release line: **cpsm 0.1.1**, protocol **1**, Capsomnia **4.0.0+**.
+Release line: **cpsm 0.1.2**, protocol **1**, Capsomnia **4.0.0+**.
 Local builds do not
 publish, install files, or change the Mac's awake state.
 
@@ -34,7 +34,7 @@ or short timers during a running job: these can sleep the Mac.
 
    The script keeps the cpsm standalone output in `cpsm/dist`, writes MacReady's
    standalone output to `../MacReady/dist`, and creates
-   `Capsomnia-Tools-0.1.1.pkg`, `Capsomnia-Tools.pkg`, and
+   `Capsomnia-Tools-0.1.2.pkg`, `Capsomnia-Tools.pkg`, and
    `Tools-SHA256SUMS.txt` in `cpsm/dist`. Set `MACREADY_REPO`, `DIST_DIR`, or
    `MACREADY_DIST` when the sibling checkout or output locations differ. Set
    `SKIP_COMPONENT_BUILD=true` to reuse existing standalone components.
@@ -64,9 +64,9 @@ This staples, validates, assesses, and refreshes both Tools package names and
 `Tools-SHA256SUMS.txt`. It does not publish the artifacts.
 
 The script submits to Apple, staples and validates the ticket, and refreshes the fixed package and checksums. It
-does not publish. When the release artifacts are ready, publish tag `v0.1.1` with
-`cpsm.pkg`, `cpsm-0.1.1.pkg`, `SHA256SUMS.txt`,
-`Capsomnia-Tools.pkg`, `Capsomnia-Tools-0.1.1.pkg`, and
+does not publish. When the release artifacts are ready, publish tag `v0.1.2` with
+`cpsm.pkg`, `cpsm-0.1.2.pkg`, `SHA256SUMS.txt`,
+`Capsomnia-Tools.pkg`, `Capsomnia-Tools-0.1.2.pkg`, and
 `Tools-SHA256SUMS.txt`, then keep the README's release links current. The
 repository includes the Skill; no ZIP installer is needed.
 
@@ -77,3 +77,7 @@ Capsomnia downloads the combined package from this repository's
 `releases/latest/download/Capsomnia-Tools.pkg` URL. Include that asset in each
 release and verify compatibility with Capsomnia 4.0.0+. Tools updates can then
 be published without rebuilding the app.
+
+Before publishing, inspect the final signed installer payload permissions and verify commands as a non-root user against the installed app. Build with a restrictive caller umask (`077`) to confirm the scripts normalize payload permissions. Do not infer normal-user access from signing or notarization alone.
+
+For each Tools release, compare the bundled MacReady version with the latest published MacReady release and installed receipts. Do not reuse older components that would downgrade existing installations. When reusing a notarized public package, verify its signature and digest, preserve all three component contents, and confirm their identifiers and versions before signing the combined package. The current Tools release bundles MacReady 0.2.0.
